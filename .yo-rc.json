@@ -1,0 +1,38 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.nelsonpantaleon"
+    },
+    "jhipsterVersion": "6.5.1",
+    "applicationType": "monolith",
+    "baseName": "mudanza",
+    "packageName": "com.nelsonpantaleon",
+    "packageFolder": "com/nelsonpantaleon",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ODJmOWNhYzAxZjBkMWRiMjYwZDI4OTIwODk3OGJmZDA2ZjgwZTM0ZGIyNzE0OTA1MjE2MTc5OGJlMTU3NGNkN2FjZTRmYmFlOTVjYTRiODY3M2MzMWM5ZTI1NGY4YjljMTlhY2VkNDRhM2RkNmZhMzAwMDljMzgxYzUzZDdjNzc=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "darkly",
+    "clientThemeVariant": "dark",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "blueprints": []
+  }
+}
