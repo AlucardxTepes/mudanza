@@ -1,0 +1,23 @@
+entity Item {
+	price Float,
+	name String,
+	quantity Integer
+}
+
+entity ItemBuyer {
+	name String required,
+    phone String required,
+    email String,
+    quantity Integer required min(1)
+    timestamp Instant
+    paid Boolean
+}
+relationship OneToMany {
+	Item{buyerList} to ItemBuyer
+}
+
+// Set pagination options
+paginate Item with pagination
+
+// Set service options to all except few
+// service all with service

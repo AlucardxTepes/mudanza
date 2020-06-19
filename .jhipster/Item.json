@@ -1,0 +1,35 @@
+{
+    "name": "Item",
+    "fields": [
+        {
+            "fieldName": "price",
+            "fieldType": "Float"
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "quantity",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "itemBuyer",
+            "otherEntityRelationshipName": "item",
+            "relationshipName": "buyerList"
+        }
+    ],
+    "changelogDate": "20200614192743",
+    "entityTableName": "item",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}
