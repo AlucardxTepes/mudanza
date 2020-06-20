@@ -21,7 +21,7 @@ export class ItemUpdateComponent implements OnInit {
     name: [],
     quantity: []
   });
-  private imageFiles: FileList;
+  private imageFiles: File[];
 
   constructor(protected itemService: ItemService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
@@ -79,14 +79,28 @@ export class ItemUpdateComponent implements OnInit {
   }
 
   onImageFileChanged(event) {
-    this.imageFiles = event.target.files;
+    this.imageFiles = Array.from(event.target.files);
+    console.log(this.imageFiles);
+    this.imageFiles.forEach(file => this.getImagePreview(file));
     console.log(`fileChange:`);
     console.log(this.imageFiles);
   }
 
-  getImagePreview(image: File) {
+  getImagePreview(image: any) {
     const reader = new FileReader();
+    reader.onload = _ => {
+      image.imgURL = reader.result;
+      image.previewLoaded = true;
+      image.readableSize = this.readableBytes(image.size);
+    };
     reader.readAsDataURL(image);
-    return (reader.onload = _event => reader.result);
+  }
+
+  readableBytes(bytes) {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return 'n/a';
+    const i = parseInt(String(Math.floor(Math.log(bytes) / Math.log(1024))), 10);
+    if (i === 0) return `${bytes} ${sizes[i]})`;
+    return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
   }
 }
