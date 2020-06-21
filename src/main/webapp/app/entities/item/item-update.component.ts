@@ -7,13 +7,16 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IItem, Item } from 'app/shared/model/item.model';
 import { ItemService } from './item.service';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'jhi-item-update',
-  templateUrl: './item-update.component.html'
+  templateUrl: './item-update.component.html',
+  styleUrls: ['item-update.component.scss']
 })
 export class ItemUpdateComponent implements OnInit {
   isSaving: boolean;
+  faTimes = faTimes;
 
   editForm = this.fb.group({
     id: [],
@@ -102,5 +105,10 @@ export class ItemUpdateComponent implements OnInit {
     const i = parseInt(String(Math.floor(Math.log(bytes) / Math.log(1024))), 10);
     if (i === 0) return `${bytes} ${sizes[i]})`;
     return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
+  }
+
+  deleteThumbImage(image: any) {
+    console.log(`Delete IMAGE: `);
+    console.log(image);
   }
 }

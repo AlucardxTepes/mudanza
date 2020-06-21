@@ -1,0 +1,19 @@
+.imageContainer {
+  position: relative;
+  width: 265px;
+  height: auto;
+}
+
+.thumbImage {
+  width: 100%;
+  height: auto;
+}
+
+.deleteImageIcon {
+  position: absolute;
+  right: 10px;
+  top: 2px;
+  font-size: 32px;
+  color: red;
+  cursor: pointer;
+}
