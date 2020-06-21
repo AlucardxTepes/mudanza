@@ -29,10 +29,10 @@
                     <input type="file" id="field_upload_image" accept='image/*' multiple (change)="onImageFileChanged($event)"/>
                 </div>
                 <div class="form-group">
-                    <ul>
-                        <li *ngFor="let image of imageFiles" class="imageContainer">
+                    <ul class="imageList">
+                        <li *ngFor="let image of imagesToUpload" class="imageContainer">
                             <fa-icon [icon]="faTimes" class="deleteImageIcon" (click)="deleteThumbImage(image)"></fa-icon>
-                            <img *ngIf="image.previewLoaded" [src]="image.imgURL" height="200"/>
+                            <img *ngIf="image.previewLoaded" [src]="image.imgURL" class="thumbImage"/>
                             <div>{{image.name}}, {{image.readableSize}}</div>
                         </li>
                     </ul>

@@ -17,6 +17,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 export class ItemUpdateComponent implements OnInit {
   isSaving: boolean;
   faTimes = faTimes;
+  imagesToUpload = new Set();
 
   editForm = this.fb.group({
     id: [],
@@ -81,14 +82,27 @@ export class ItemUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
+  /**
+   * Loads new images to be posted to API
+   * @param event the file blob containing the image
+   */
   onImageFileChanged(event) {
     this.imageFiles = Array.from(event.target.files);
     console.log(this.imageFiles);
-    this.imageFiles.forEach(file => this.getImagePreview(file));
+    this.imageFiles.forEach(file => {
+      this.getImagePreview(file);
+      this.imagesToUpload.add(file);
+    });
     console.log(`fileChange:`);
     console.log(this.imageFiles);
+    console.log(`images in set: ${this.imagesToUpload.size}`);
+    console.log(this.imagesToUpload);
   }
 
+  /**
+   * Reads image from blob and sets its path to a 'imgURL' field on the image file
+   * @param image
+   */
   getImagePreview(image: any) {
     const reader = new FileReader();
     reader.onload = _ => {
@@ -99,6 +113,10 @@ export class ItemUpdateComponent implements OnInit {
     reader.readAsDataURL(image);
   }
 
+  /**
+   * Converts bytes to readable string format
+   * @param bytes
+   */
   readableBytes(bytes) {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     if (bytes === 0) return 'n/a';
@@ -107,8 +125,14 @@ export class ItemUpdateComponent implements OnInit {
     return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
   }
 
+  /**
+   * Removes image from imagesToUpload Set using image's imageURL field
+   * @param image
+   */
   deleteThumbImage(image: any) {
     console.log(`Delete IMAGE: `);
     console.log(image);
+    this.imagesToUpload.delete(image);
+    console.log(`Image set size after delete: ${this.imagesToUpload.size}`);
   }
 }
