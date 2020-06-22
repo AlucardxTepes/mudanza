@@ -1,7 +1,6 @@
 package com.nelsonpantaleon.web.rest;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +15,6 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/upload")
 public class FileUploadController {
     private String storageLocation = "src/main/resources/itemImages/";
 
@@ -31,12 +29,12 @@ public class FileUploadController {
 //        return "uploadForm";
 //    }
 
-    @PostMapping("/")
-    public String handleFileUpload(@RequestParam("files") List<MultipartFile> files, Long itemId) throws IOException {
+    @PostMapping("/api/upload")
+    public String handleFileUpload(@RequestParam("files") List<MultipartFile> files, @RequestParam(value = "itemId") Long itemId) throws IOException {
         return storeFiles(files, itemId).toString();
     }
 
-    private Set storeFiles(List<MultipartFile> requestFiles, @RequestParam(value = "itemId") Long itemId) throws IOException {
+    private Set storeFiles(List<MultipartFile> requestFiles, Long itemId) throws IOException {
         Set storedFilePaths = new HashSet<String>();
         String fileExtension = "png";
         for(MultipartFile requestFile : requestFiles) {

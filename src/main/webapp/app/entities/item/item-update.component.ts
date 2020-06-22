@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { IItem, Item } from 'app/shared/model/item.model';
 import { ItemService } from './item.service';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FileUploadService } from 'app/entities/fileUpload.service';
 
 @Component({
   selector: 'jhi-item-update',
@@ -27,7 +28,12 @@ export class ItemUpdateComponent implements OnInit {
   });
   private imageFiles: File[];
 
-  constructor(protected itemService: ItemService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(
+    protected itemService: ItemService,
+    protected fileUploadService: FileUploadService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit() {
     this.isSaving = false;
@@ -69,17 +75,39 @@ export class ItemUpdateComponent implements OnInit {
     };
   }
 
+  /**
+   * 1.POST item to the backend
+   * 2.Proceed to uploading the item's images if there are any
+   * @param result
+   */
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IItem>>) {
+    result.subscribe(
+      httpResponse => {
+        if (this.imagesToUpload.size > 0) {
+          this.subscribeToUploadImageResponse(this.fileUploadService.upload(this.imagesToUpload, httpResponse.body.id));
+        } else {
+          this.onSaveSuccess();
+        }
+      },
+      () => {
+        this.onSaveError();
+      }
+    );
+  }
+
+  protected subscribeToUploadImageResponse(result: Observable<HttpResponse<String>>) {
     result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
   }
 
   protected onSaveSuccess() {
     this.isSaving = false;
+    console.log('OnSaveSuccess');
     this.previousState();
   }
 
   protected onSaveError() {
     this.isSaving = false;
+    console.log('OnSaveError');
   }
 
   /**
