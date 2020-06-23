@@ -39,6 +39,7 @@ export class ItemUpdateComponent implements OnInit {
     this.isSaving = false;
     this.activatedRoute.data.subscribe(({ item }) => {
       this.updateForm(item);
+      this.updateImages(item.id);
     });
   }
 
@@ -163,4 +164,6 @@ export class ItemUpdateComponent implements OnInit {
     this.imagesToUpload.delete(image);
     console.log(`Image set size after delete: ${this.imagesToUpload.size}`);
   }
+
+  private updateImages(id: any) {}
 }

@@ -1,5 +1,7 @@
 package com.nelsonpantaleon.web.rest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,19 +17,10 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-public class FileUploadController {
-    private String storageLocation = "src/main/resources/itemImages/";
+public class FileController {
+    private final Logger log = LoggerFactory.getLogger(FileController.class);
 
-//    @GetMapping("/")
-//    public String listUploadedFiles(Model model) throws IOException {
-//
-//        model.addAttribute("files", storageService.loadAll().map(
-//            path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-//                "serveFile", path.getFileName().toString()).build().toUri().toString())
-//            .collect(Collectors.toList()));
-//
-//        return "uploadForm";
-//    }
+    private String storageLocation = "/uploads/images/items/";
 
     @PostMapping("/api/upload")
     public String handleFileUpload(@RequestParam("files") List<MultipartFile> files, @RequestParam(value = "itemId") Long itemId) throws IOException {
