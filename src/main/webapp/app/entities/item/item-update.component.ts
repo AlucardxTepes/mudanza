@@ -9,6 +9,8 @@ import { IItem, Item } from 'app/shared/model/item.model';
 import { ItemService } from './item.service';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FileUploadService } from 'app/entities/fileUpload.service';
+import { IMAGES_PATH } from 'app/app.constants';
+import { IItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 @Component({
   selector: 'jhi-item-update',
@@ -37,9 +39,11 @@ export class ItemUpdateComponent implements OnInit {
 
   ngOnInit() {
     this.isSaving = false;
-    this.activatedRoute.data.subscribe(({ item }) => {
-      this.updateForm(item);
-      this.updateImages(item.id);
+    this.activatedRoute.data.subscribe(({ itemWithPictures }) => {
+      console.log('route');
+      console.log(itemWithPictures);
+      this.updateForm(itemWithPictures.item);
+      this.updateImages(itemWithPictures);
     });
   }
 
@@ -82,22 +86,17 @@ export class ItemUpdateComponent implements OnInit {
    * @param result
    */
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IItem>>) {
-    result.subscribe(
-      httpResponse => {
-        if (this.imagesToUpload.size > 0) {
-          this.subscribeToUploadImageResponse(this.fileUploadService.upload(this.imagesToUpload, httpResponse.body.id));
-        } else {
-          this.onSaveSuccess();
-        }
-      },
-      () => {
-        this.onSaveError();
+    result.subscribe(httpResponse => {
+      if (this.imagesToUpload.size > 0) {
+        this.subscribeToUploadImageResponse(this.fileUploadService.upload(this.imagesToUpload, httpResponse.body.id));
+      } else {
+        this.onSaveSuccess();
       }
-    );
+    });
   }
 
   protected subscribeToUploadImageResponse(result: Observable<HttpResponse<String>>) {
-    result.subscribe(() => this.onSaveSuccess(), () => this.onSaveError());
+    result.subscribe(() => this.onSaveSuccess());
   }
 
   protected onSaveSuccess() {
@@ -165,5 +164,31 @@ export class ItemUpdateComponent implements OnInit {
     console.log(`Image set size after delete: ${this.imagesToUpload.size}`);
   }
 
-  private updateImages(id: any) {}
+  private updateImages(itemWithPictures: IItemWithPictures) {
+    console.log(`updateImages`);
+    if (itemWithPictures.pictures) {
+      itemWithPictures.pictures.forEach(filename => {
+        const imageFullPath = `${location.origin}/${IMAGES_PATH}/${itemWithPictures.item.id}/${filename}`;
+        console.log(imageFullPath);
+        fetch(imageFullPath)
+          .then(res => res.blob()) // Gets the response and returns it as a blob
+          .then(blob => {
+            const imageFile = this.blobToFile(blob, filename);
+            (imageFile as any).imgURL = imageFullPath;
+            (imageFile as any).previewLoaded = true;
+            this.imagesToUpload.add(imageFile);
+          });
+      });
+    }
+  }
+
+  public blobToFile = (theBlob: Blob, fileName: string): File => {
+    const b: any = theBlob;
+    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    b.lastModifiedDate = new Date();
+    b.name = fileName;
+
+    //Cast to a File() type
+    return theBlob as File;
+  };
 }

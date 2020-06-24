@@ -6,7 +6,7 @@ export interface IItem {
   name?: string;
   quantity?: number;
   buyerLists?: IItemBuyer[];
-  images?: string[];
+  pictures?: string[];
 }
 
 export class Item implements IItem {
@@ -16,6 +16,6 @@ export class Item implements IItem {
     public name?: string,
     public quantity?: number,
     public buyerLists?: IItemBuyer[],
-    public images?: string[]
+    public pictures?: string[]
   ) {}
 }

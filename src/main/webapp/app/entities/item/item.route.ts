@@ -11,17 +11,18 @@ import { ItemComponent } from './item.component';
 import { ItemDetailComponent } from './item-detail.component';
 import { ItemUpdateComponent } from './item-update.component';
 import { IItem } from 'app/shared/model/item.model';
+import { ItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 @Injectable({ providedIn: 'root' })
-export class ItemResolve implements Resolve<IItem> {
+export class ItemResolve implements Resolve<ItemWithPictures> {
   constructor(private service: ItemService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<IItem> {
+  resolve(route: ActivatedRouteSnapshot): Observable<ItemWithPictures> {
     const id = route.params['id'];
     if (id) {
-      return this.service.find(id).pipe(map((item: HttpResponse<Item>) => item.body));
+      return this.service.findWithPictures(id).pipe(map((itemWithPictures: HttpResponse<ItemWithPictures>) => itemWithPictures.body));
     }
-    return of(new Item());
+    return of(new ItemWithPictures());
   }
 }
 
@@ -43,7 +44,7 @@ export const itemRoute: Routes = [
     path: ':id/view',
     component: ItemDetailComponent,
     resolve: {
-      item: ItemResolve
+      itemWithPictures: ItemResolve
     },
     data: {
       authorities: ['ROLE_USER'],
@@ -67,7 +68,7 @@ export const itemRoute: Routes = [
     path: ':id/edit',
     component: ItemUpdateComponent,
     resolve: {
-      item: ItemResolve
+      itemWithPictures: ItemResolve
     },
     data: {
       authorities: ['ROLE_USER'],

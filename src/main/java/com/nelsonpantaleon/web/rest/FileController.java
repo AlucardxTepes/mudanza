@@ -7,6 +7,7 @@ import com.nelsonpantaleon.repository.ItemRepository;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,7 @@ public class FileController {
     }
 
     @PostMapping("/api/upload")
-    public String handleFileUpload(@RequestParam("files") List<MultipartFile> files, @RequestParam(value = "itemId") Long itemId) throws IOException {
+    public ResponseEntity<Set<String>> handleFileUpload(@RequestParam("files") List<MultipartFile> files, @RequestParam(value = "itemId") Long itemId) throws IOException {
         Set<String> storedFilepaths = storeFiles(files, itemId);
 
         // Create itemPictures for specified Item
@@ -48,7 +49,7 @@ public class FileController {
         itemPictureRepository.saveAll(pictures);
 
         // Return list of paths as a String
-        return storedFilepaths.toString();
+        return ResponseEntity.ok(storedFilepaths);
     }
 
     private Set<String> storeFiles(List<MultipartFile> requestFiles, Long itemId) throws IOException {

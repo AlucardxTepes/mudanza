@@ -10,13 +10,14 @@ import { IItem } from 'app/shared/model/item.model';
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { ItemService } from './item.service';
 import { ItemDeleteDialogComponent } from './item-delete-dialog.component';
+import { ItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 @Component({
   selector: 'jhi-item',
   templateUrl: './item.component.html'
 })
 export class ItemComponent implements OnInit, OnDestroy {
-  items: IItem[];
+  items: ItemWithPictures[];
   error: any;
   success: any;
   eventSubscriber: Subscription;
@@ -53,7 +54,7 @@ export class ItemComponent implements OnInit, OnDestroy {
         size: this.itemsPerPage,
         sort: this.sort()
       })
-      .subscribe((res: HttpResponse<IItem[]>) => this.paginateItems(res.body, res.headers));
+      .subscribe((res: HttpResponse<ItemWithPictures[]>) => this.paginateItems(res.body, res.headers));
   }
 
   loadPage(page: number) {
@@ -116,7 +117,7 @@ export class ItemComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  protected paginateItems(data: IItem[], headers: HttpHeaders) {
+  protected paginateItems(data: ItemWithPictures[], headers: HttpHeaders) {
     this.links = this.parseLinks.parse(headers.get('link'));
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
     this.items = data;

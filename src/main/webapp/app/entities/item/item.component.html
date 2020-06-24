@@ -26,26 +26,26 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let item of items ;trackBy: trackId">
-                <td><a [routerLink]="['/item', item.id, 'view' ]">{{item.id}}</a></td>
-                <td>{{item.price}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.quantity}}</td>
+            <tr *ngFor="let itemWithPicture of items ;trackBy: trackId">
+                <td><a [routerLink]="['/item', itemWithPicture.item.id, 'view' ]">{{itemWithPicture.item.id}}</a></td>
+                <td>{{itemWithPicture.item.price}}</td>
+                <td>{{itemWithPicture.item.name}}</td>
+                <td>{{itemWithPicture.item.quantity}}</td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"
-                                [routerLink]="['/item', item.id, 'view' ]"
+                                [routerLink]="['/item', itemWithPicture.item.id, 'view' ]"
                                 class="btn btn-info btn-sm">
                             <fa-icon [icon]="'eye'"></fa-icon>
                             <span class="d-none d-md-inline">View</span>
                         </button>
                         <button type="submit"
-                                [routerLink]="['/item', item.id, 'edit']"
+                                [routerLink]="['/item', itemWithPicture.item.id, 'edit']"
                                 class="btn btn-primary btn-sm">
                             <fa-icon [icon]="'pencil-alt'"></fa-icon>
                             <span class="d-none d-md-inline">Edit</span>
                         </button>
-                        <button type="submit" (click)="delete(item)"
+                        <button type="submit" (click)="delete(itemWithPicture)"
                                 class="btn btn-danger btn-sm">
                             <fa-icon [icon]="'times'"></fa-icon>
                             <span class="d-none d-md-inline">Delete</span>

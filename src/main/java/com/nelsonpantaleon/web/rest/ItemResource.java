@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -99,9 +100,16 @@ public class ItemResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of items in body.
      */
     @GetMapping("/items")
-    public ResponseEntity<List<Item>> getAllItems(Pageable pageable) {
+    public ResponseEntity<List<ItemWithPicturesDTO>> getAllItems(Pageable pageable) {
         log.debug("REST request to get a page of Items");
-        Page<Item> page = itemRepository.findAll(pageable);
+        List<ItemWithPicturesDTO> items = itemRepository.findAll(pageable).stream().map(item -> {
+            ItemWithPicturesDTO result = new ItemWithPicturesDTO();
+            result.setItem(item);
+            result.setPictures(itemPictureRepository.findAllByItemId(item.getId()).stream().map(itemPicture -> itemPicture.getFilename()).collect(Collectors.toSet()));
+            return result;
+        }).collect(Collectors.toList());
+        Page<ItemWithPicturesDTO> page = new PageImpl<>(items, pageable, items.size());
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -126,7 +134,7 @@ public class ItemResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the wrapper containing the item and picture filename list
      * or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/itemsWithPictures/{id}")
+    @GetMapping("/itemWithPictures/{id}")
     public ResponseEntity<ItemWithPicturesDTO> getItemWithPictures(@PathVariable Long id) {
         log.debug("REST request to get Item with Pictures : {}", id);
         Optional<Item> item = itemRepository.findById(id);
