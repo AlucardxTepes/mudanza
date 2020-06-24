@@ -1,9 +1,10 @@
 package com.nelsonpantaleon.web.rest;
 
 import com.nelsonpantaleon.domain.Item;
+import com.nelsonpantaleon.repository.ItemPictureRepository;
 import com.nelsonpantaleon.repository.ItemRepository;
+import com.nelsonpantaleon.service.dto.ItemWithPicturesDTO;
 import com.nelsonpantaleon.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -13,17 +14,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional; 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for managing {@link com.nelsonpantaleon.domain.Item}.
@@ -42,8 +43,11 @@ public class ItemResource {
 
     private final ItemRepository itemRepository;
 
-    public ItemResource(ItemRepository itemRepository) {
+    private final ItemPictureRepository itemPictureRepository;
+
+    public ItemResource(ItemRepository itemRepository, ItemPictureRepository itemPictureRepository) {
         this.itemRepository = itemRepository;
+        this.itemPictureRepository = itemPictureRepository;
     }
 
     /**
@@ -116,15 +120,43 @@ public class ItemResource {
     }
 
     /**
+     * {@code GET  /items/:id} : get the "id" item with its list of picture paths.
+     *
+     * @param id the id of the item to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the wrapper containing the item and picture filename list
+     * or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/itemsWithPictures/{id}")
+    public ResponseEntity<ItemWithPicturesDTO> getItemWithPictures(@PathVariable Long id) {
+        log.debug("REST request to get Item with Pictures : {}", id);
+        Optional<Item> item = itemRepository.findById(id);
+        if (item.isPresent()) {
+            ItemWithPicturesDTO result = new ItemWithPicturesDTO();
+            result.setItem(item.get());
+            result.setPictures(itemPictureRepository.findAllByItemId(id)
+                .stream()
+                .map(itemPicture -> itemPicture.getFilename())
+                .collect(Collectors.toSet())
+            );
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
      * {@code DELETE  /items/:id} : delete the "id" item.
      *
      * @param id the id of the item to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/items/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteItem(@PathVariable Long id) throws IOException {
         log.debug("REST request to delete Item : {}", id);
         itemRepository.deleteById(id);
+        itemPictureRepository.deleteAllByItemId(id);
+        // delete image files from hard drive
+        FileController.deleteFiles(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 }

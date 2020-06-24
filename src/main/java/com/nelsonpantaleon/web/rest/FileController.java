@@ -1,5 +1,10 @@
 package com.nelsonpantaleon.web.rest;
 
+import com.nelsonpantaleon.domain.Item;
+import com.nelsonpantaleon.domain.ItemPicture;
+import com.nelsonpantaleon.repository.ItemPictureRepository;
+import com.nelsonpantaleon.repository.ItemRepository;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,17 +25,36 @@ import java.util.UUID;
 public class FileController {
     private final Logger log = LoggerFactory.getLogger(FileController.class);
 
-    private String storageLocation = "/uploads/images/items/";
+    private static String storageLocation = "/uploads/images/items/";
+
+    private ItemRepository itemRepository;
+    private ItemPictureRepository itemPictureRepository;
+
+    public FileController(ItemRepository itemRepository, ItemPictureRepository itemPictureRepository) {
+        this.itemRepository = itemRepository;
+        this.itemPictureRepository = itemPictureRepository;
+    }
 
     @PostMapping("/api/upload")
     public String handleFileUpload(@RequestParam("files") List<MultipartFile> files, @RequestParam(value = "itemId") Long itemId) throws IOException {
-        return storeFiles(files, itemId).toString();
+        Set<String> storedFilepaths = storeFiles(files, itemId);
+
+        // Create itemPictures for specified Item
+        Item item = itemRepository.getOne(itemId);
+        Set<ItemPicture> pictures = new HashSet<>();
+        storedFilepaths.forEach(path -> pictures.add(new ItemPicture(path, item)));
+
+        // Store picture paths
+        itemPictureRepository.saveAll(pictures);
+
+        // Return list of paths as a String
+        return storedFilepaths.toString();
     }
 
-    private Set storeFiles(List<MultipartFile> requestFiles, Long itemId) throws IOException {
-        Set storedFilePaths = new HashSet<String>();
+    private Set<String> storeFiles(List<MultipartFile> requestFiles, Long itemId) throws IOException {
+        Set<String> filenames = new HashSet<>();
         String fileExtension = "png";
-        for(MultipartFile requestFile : requestFiles) {
+        for (MultipartFile requestFile : requestFiles) {
             String fileName = UUID.nameUUIDFromBytes(requestFile.getBytes()).toString();
             byte[] buf = new byte[1024];
             File file = new File(storageLocation + itemId + "/" + fileName + "." + fileExtension);
@@ -42,9 +66,18 @@ public class FileController {
                     fileOutputStream.write(buf, 0, numRead);
                 }
             }
-            storedFilePaths.add(file.getPath());
+            filenames.add(file.getName());
         }
-        return storedFilePaths;
+        return filenames;
+    }
+
+    public static void deleteFiles(Long itemId) throws IOException {
+        try {
+            FileUtils.deleteDirectory(new File(storageLocation + itemId + "/"));
+        } catch (IllegalArgumentException e) {
+            LoggerFactory.getLogger(FileController.class).debug("Delete files for item ID " + itemId + " failed. Directory does not exist");
+            e.printStackTrace();
+        }
     }
 
 }

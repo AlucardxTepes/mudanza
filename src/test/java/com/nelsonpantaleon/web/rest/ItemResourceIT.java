@@ -67,7 +67,7 @@ public class ItemResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ItemResource itemResource = new ItemResource(itemRepository);
+        final ItemResource itemResource = new ItemResource(itemRepository, itemPictureRepository);
         this.restItemMockMvc = MockMvcBuilders.standaloneSetup(itemResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -163,7 +163,7 @@ public class ItemResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)));
     }
-    
+
     @Test
     @Transactional
     public void getItem() throws Exception {
