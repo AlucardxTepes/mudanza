@@ -9,15 +9,19 @@
                 <dd>
                     <span>{{itemWithPictures.item.price}}</span>
                 </dd>
-<!--                <dt><span>Name</span></dt>-->
-<!--                <dd>-->
-<!--                    <span>{{itemWithPictures.item.name}}</span>-->
-<!--                </dd>-->
                 <dt><span>Quantity</span></dt>
                 <dd>
                     <span>{{itemWithPictures.item.quantity}}</span>
                 </dd>
             </dl>
+
+            <div class="form-group">
+                <ul class="imageList">
+                    <li *ngFor="let image of images" class="imageContainer">
+                        <a [href]="image.imgURL" target="_blank"><img *ngIf="image.previewLoaded" [src]="image.imgURL" class="thumbImage"/></a>
+                    </li>
+                </ul>
+            </div>
 
             <button type="submit"
                     (click)="previousState()"
