@@ -43,7 +43,7 @@ public class ItemBuyer implements Serializable {
     private Boolean paid;
 
     @ManyToOne
-    @JsonIgnoreProperties("buyerLists")
+    @JsonIgnoreProperties("buyerList")
     private Item item;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

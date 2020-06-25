@@ -3,6 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 
 import { IItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 import { IMAGES_PATH } from 'app/app.constants';
+import { ItemBuyerService } from 'app/entities/item-buyer/item-buyer.service';
+import { IItemBuyer, ItemBuyer } from 'app/shared/model/item-buyer.model';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-item-detail',
@@ -12,13 +15,15 @@ import { IMAGES_PATH } from 'app/app.constants';
 export class ItemDetailComponent implements OnInit {
   itemWithPictures: IItemWithPictures;
   images = new Set();
+  itemBuyers = Array.of<ItemBuyer>();
 
-  constructor(protected activatedRoute: ActivatedRoute) {}
+  constructor(protected activatedRoute: ActivatedRoute, protected itemBuyerService: ItemBuyerService) {}
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ itemWithPictures }) => {
       this.itemWithPictures = itemWithPictures;
       this.updateImages(itemWithPictures);
+      this.updateItemBuyers(itemWithPictures.item.id);
     });
   }
 
@@ -53,4 +58,10 @@ export class ItemDetailComponent implements OnInit {
     //Cast to a File() type
     return theBlob as File;
   };
+
+  private updateItemBuyers(itemId: number) {
+    this.itemBuyerService.findByItemId(itemId).subscribe((res: HttpResponse<IItemBuyer[]>) => {
+      this.itemBuyers = res.body;
+    });
+  }
 }

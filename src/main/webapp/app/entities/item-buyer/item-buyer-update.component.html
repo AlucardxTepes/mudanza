@@ -55,12 +55,12 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" for="field_timestamp">Timestamp</label>
-                    <div class="d-flex">
-                        <input id="field_timestamp" type="datetime-local" class="form-control" name="timestamp" formControlName="timestamp" placeholder="YYYY-MM-DD HH:mm"/>
-                    </div>
-                </div>
+<!--                <div class="form-group">-->
+<!--                    <label class="form-control-label" for="field_timestamp">Timestamp</label>-->
+<!--                    <div class="d-flex">-->
+<!--                        <input id="field_timestamp" type="datetime-local" class="form-control" name="timestamp" formControlName="timestamp" placeholder="YYYY-MM-DD HH:mm"/>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="form-group">
                     <label class="form-control-label" for="field_paid">Paid</label>
                     <input type="checkbox" class="form-control" name="paid" id="field_paid"
@@ -71,7 +71,7 @@
                     <label class="form-control-label" for="field_item">Item</label>
                     <select class="form-control" id="field_item" name="item" formControlName="item">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="itemOption.id === editForm.get('item').value?.id ? editForm.get('item').value : itemOption" *ngFor="let itemOption of items; trackBy: trackItemById">{{itemOption.id}}</option>
+                        <option [ngValue]="itemOption.item.name === editForm.get('item').value?.name ? editForm.get('item').value : itemOption" *ngFor="let itemOption of items; trackBy: trackItemById">{{itemOption.item.name}}</option>
                     </select>
                 </div>
             </div>

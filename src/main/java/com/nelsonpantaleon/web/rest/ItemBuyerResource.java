@@ -10,13 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional; 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,7 @@ public class ItemBuyerResource {
         if (itemBuyer.getId() != null) {
             throw new BadRequestAlertException("A new itemBuyer cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        itemBuyer.setTimestamp(Instant.now());
         ItemBuyer result = itemBuyerRepository.save(itemBuyer);
         return ResponseEntity.created(new URI("/api/item-buyers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
@@ -91,6 +93,18 @@ public class ItemBuyerResource {
     public List<ItemBuyer> getAllItemBuyers() {
         log.debug("REST request to get all ItemBuyers");
         return itemBuyerRepository.findAll();
+    }
+
+    /**
+     * {@code GET  /items/:itemId/item-buyers} : get all the itemBuyers for a given item.
+     *
+
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of itemBuyers in body.
+     */
+    @GetMapping("/items/{itemId}/item-buyers")
+    public List<ItemBuyer> getItemBuyersByItemId(@PathVariable Long itemId) {
+        log.debug("REST request to get all ItemBuyers for ItemId: " + itemId);
+        return itemBuyerRepository.findAllByItemId(itemId);
     }
 
     /**

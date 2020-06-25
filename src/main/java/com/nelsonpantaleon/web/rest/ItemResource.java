@@ -1,6 +1,8 @@
 package com.nelsonpantaleon.web.rest;
 
 import com.nelsonpantaleon.domain.Item;
+import com.nelsonpantaleon.domain.ItemPicture;
+import com.nelsonpantaleon.repository.ItemBuyerRepository;
 import com.nelsonpantaleon.repository.ItemPictureRepository;
 import com.nelsonpantaleon.repository.ItemRepository;
 import com.nelsonpantaleon.service.dto.ItemWithPicturesDTO;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,9 +49,13 @@ public class ItemResource {
 
     private final ItemPictureRepository itemPictureRepository;
 
-    public ItemResource(ItemRepository itemRepository, ItemPictureRepository itemPictureRepository) {
+    private final ItemBuyerRepository itemBuyerRepository;
+
+    public ItemResource(ItemRepository itemRepository, ItemPictureRepository itemPictureRepository,
+                        ItemBuyerRepository itemBuyerRepository) {
         this.itemRepository = itemRepository;
         this.itemPictureRepository = itemPictureRepository;
+        this.itemBuyerRepository = itemBuyerRepository;
     }
 
     /**
@@ -143,9 +150,10 @@ public class ItemResource {
             result.setItem(item.get());
             result.setPictures(itemPictureRepository.findAllByItemId(id)
                 .stream()
-                .map(itemPicture -> itemPicture.getFilename())
+                .map(ItemPicture::getFilename)
                 .collect(Collectors.toSet())
             );
+            result.getItem().buyerList(new HashSet<>(itemBuyerRepository.findAllByItemId(result.getItem().getId())));
             return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.notFound().build();

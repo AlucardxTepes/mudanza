@@ -29,7 +29,7 @@ public class Item implements Serializable {
     private Integer quantity;
 
     @OneToMany(mappedBy = "item")
-    private Set<ItemBuyer> buyerLists = new HashSet<>();
+    private Set<ItemBuyer> buyerList = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -79,29 +79,29 @@ public class Item implements Serializable {
         this.quantity = quantity;
     }
 
-    public Set<ItemBuyer> getBuyerLists() {
-        return buyerLists;
+    public Set<ItemBuyer> getBuyerList() {
+        return buyerList;
     }
 
-    public Item buyerLists(Set<ItemBuyer> itemBuyers) {
-        this.buyerLists = itemBuyers;
+    public Item buyerList(Set<ItemBuyer> itemBuyers) {
+        this.buyerList = itemBuyers;
         return this;
     }
 
     public Item addBuyerList(ItemBuyer itemBuyer) {
-        this.buyerLists.add(itemBuyer);
+        this.buyerList.add(itemBuyer);
         itemBuyer.setItem(this);
         return this;
     }
 
     public Item removeBuyerList(ItemBuyer itemBuyer) {
-        this.buyerLists.remove(itemBuyer);
+        this.buyerList.remove(itemBuyer);
         itemBuyer.setItem(null);
         return this;
     }
 
     public void setBuyerLists(Set<ItemBuyer> itemBuyers) {
-        this.buyerLists = itemBuyers;
+        this.buyerList = itemBuyers;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 

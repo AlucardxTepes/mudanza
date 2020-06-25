@@ -39,6 +39,12 @@ export class ItemBuyerService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
+  findByItemId(itemId: number): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<IItemBuyer[]>(`api/items/${itemId}/item-buyers`, { observe: 'response' })
+      .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
+  }
+
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http

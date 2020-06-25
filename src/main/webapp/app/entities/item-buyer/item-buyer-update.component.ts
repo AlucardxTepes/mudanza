@@ -12,6 +12,7 @@ import { IItemBuyer, ItemBuyer } from 'app/shared/model/item-buyer.model';
 import { ItemBuyerService } from './item-buyer.service';
 import { IItem } from 'app/shared/model/item.model';
 import { ItemService } from 'app/entities/item/item.service';
+import { IItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 @Component({
   selector: 'jhi-item-buyer-update',
@@ -28,7 +29,7 @@ export class ItemBuyerUpdateComponent implements OnInit {
     phone: [null, [Validators.required]],
     email: [],
     quantity: [null, [Validators.required, Validators.min(1)]],
-    timestamp: [],
+    // timestamp: [],
     paid: [],
     item: []
   });
@@ -44,21 +45,28 @@ export class ItemBuyerUpdateComponent implements OnInit {
   ngOnInit() {
     this.isSaving = false;
     this.activatedRoute.data.subscribe(({ itemBuyer }) => {
+      console.log('===== ItemBuyer =====');
+      console.log(itemBuyer);
       this.updateForm(itemBuyer);
     });
     this.itemService
       .query()
-      .subscribe((res: HttpResponse<IItem[]>) => (this.items = res.body), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe(
+        (res: HttpResponse<IItemWithPictures[]>) => (this.items = res.body),
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
   }
 
   updateForm(itemBuyer: IItemBuyer) {
+    console.log('==== UPATE FORM ==== ');
+    console.log(itemBuyer.item);
     this.editForm.patchValue({
       id: itemBuyer.id,
       name: itemBuyer.name,
       phone: itemBuyer.phone,
       email: itemBuyer.email,
       quantity: itemBuyer.quantity,
-      timestamp: itemBuyer.timestamp != null ? itemBuyer.timestamp.format(DATE_TIME_FORMAT) : null,
+      // timestamp: itemBuyer.timestamp != null ? itemBuyer.timestamp.format(DATE_TIME_FORMAT) : null,
       paid: itemBuyer.paid,
       item: itemBuyer.item
     });
@@ -79,6 +87,8 @@ export class ItemBuyerUpdateComponent implements OnInit {
   }
 
   private createFromForm(): IItemBuyer {
+    console.log('==== CREATE FROM FORM ===');
+    console.log(this.editForm.get(['item']).value.item);
     return {
       ...new ItemBuyer(),
       id: this.editForm.get(['id']).value,
@@ -86,10 +96,10 @@ export class ItemBuyerUpdateComponent implements OnInit {
       phone: this.editForm.get(['phone']).value,
       email: this.editForm.get(['email']).value,
       quantity: this.editForm.get(['quantity']).value,
-      timestamp:
-        this.editForm.get(['timestamp']).value != null ? moment(this.editForm.get(['timestamp']).value, DATE_TIME_FORMAT) : undefined,
+      // timestamp:
+      //   this.editForm.get(['timestamp']).value != null ? moment(this.editForm.get(['timestamp']).value, DATE_TIME_FORMAT) : undefined,
       paid: this.editForm.get(['paid']).value,
-      item: this.editForm.get(['item']).value
+      item: this.editForm.get(['item']).value.item
     };
   }
 
@@ -109,7 +119,7 @@ export class ItemBuyerUpdateComponent implements OnInit {
     this.jhiAlertService.error(errorMessage, null, null);
   }
 
-  trackItemById(index: number, item: IItem) {
-    return item.id;
+  trackItemById(index: number, itemWithPictures: IItemWithPictures) {
+    return itemWithPictures.item.id;
   }
 }

@@ -23,6 +23,15 @@
                 </ul>
             </div>
 
+            <div>
+                <h4>Buyers</h4>
+                <ol>
+                    <li *ngFor="let buyer of itemBuyers">
+                        {{buyer.name}}
+                    </li>
+                </ol>
+            </div>
+
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">
