@@ -5,12 +5,13 @@ import { JhiEventManager } from 'ng-jhipster';
 
 import { IItem } from 'app/shared/model/item.model';
 import { ItemService } from './item.service';
+import { IItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 @Component({
   templateUrl: './item-delete-dialog.component.html'
 })
 export class ItemDeleteDialogComponent {
-  item: IItem;
+  item: IItemWithPictures;
 
   constructor(protected itemService: ItemService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
 

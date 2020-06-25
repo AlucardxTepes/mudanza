@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A Item.
+ * an Item.
  */
 @Entity
 @Table(name = "item")

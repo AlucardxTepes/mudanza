@@ -7,9 +7,10 @@ import { ItemDetailComponent } from './item-detail.component';
 import { ItemUpdateComponent } from './item-update.component';
 import { ItemDeleteDialogComponent } from './item-delete-dialog.component';
 import { itemRoute } from './item.route';
+import { MatGridListModule, MatCardModule, MatButtonModule, MatRippleModule } from '@angular/material';
 
 @NgModule({
-  imports: [MudanzaSharedModule, RouterModule.forChild(itemRoute)],
+  imports: [MudanzaSharedModule, RouterModule.forChild(itemRoute), MatGridListModule, MatCardModule, MatButtonModule, MatRippleModule],
   declarations: [ItemComponent, ItemDetailComponent, ItemUpdateComponent, ItemDeleteDialogComponent],
   entryComponents: [ItemDeleteDialogComponent]
 })

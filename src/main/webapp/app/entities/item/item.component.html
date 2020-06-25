@@ -14,52 +14,86 @@
     <div class="alert alert-warning" *ngIf="items?.length === 0">
         <span>No items found</span>
     </div>
-    <div class="table-responsive" *ngIf="items?.length > 0">
-        <table class="table table-striped" aria-describedby="page-heading">
-            <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th scope="col"  jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="price"><span>Price</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="quantity"><span>Quantity</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let itemWithPicture of items ;trackBy: trackId">
-                <td><a [routerLink]="['/item', itemWithPicture.item.id, 'view' ]">{{itemWithPicture.item.id}}</a></td>
-                <td>{{itemWithPicture.item.price}}</td>
-                <td>{{itemWithPicture.item.name}}</td>
-                <td>{{itemWithPicture.item.quantity}}</td>
-                <td class="text-right">
-                    <div class="btn-group">
-                        <button type="submit"
-                                [routerLink]="['/item', itemWithPicture.item.id, 'view' ]"
-                                class="btn btn-info btn-sm">
-                            <fa-icon [icon]="'eye'"></fa-icon>
-                            <span class="d-none d-md-inline">View</span>
-                        </button>
-                        <button type="submit"
-                                [routerLink]="['/item', itemWithPicture.item.id, 'edit']"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
-                            <span class="d-none d-md-inline">Edit</span>
-                        </button>
-                        <button type="submit" (click)="delete(itemWithPicture)"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon [icon]="'times'"></fa-icon>
-                            <span class="d-none d-md-inline">Delete</span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+
+    <mat-grid-list [cols]="breakpoint" rowHeight="1:1" (window:resize)="onResize($event)" gutterSize="10">
+        <mat-grid-tile *ngFor="let itemWithPicture of items; trackBy: trackId" colspan="1" rowspan="1">
+            <mat-grid-tile-header>
+                <div><b>{{itemWithPicture.item.name}}</b></div>
+            </mat-grid-tile-header>
+            <img [src]="IMG_SRC_PATH + itemWithPicture.item.id + '/' + itemWithPicture.pictures[0]"
+                 class="grid-item-image">
+            <mat-grid-tile-footer>
+                <div> ${{itemWithPicture.item.price | number }}</div>
+                <div class="btn-group item-grid-action-buttons">
+                    <button type="submit" [routerLink]="['/item', itemWithPicture.item.id, 'view' ]"
+                            class="btn btn-info btn-sm">
+                        <fa-icon [icon]="'eye'"></fa-icon>
+                        <span class="d-none d-md-inline">View</span>
+                    </button>
+                    <button type="submit" [routerLink]="['/item', itemWithPicture.item.id, 'edit']"
+                            class="btn btn-primary btn-sm">
+                        <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                        <span class="d-none d-md-inline">Edit</span>
+                    </button>
+                    <button type="submit" (click)="delete(itemWithPicture)" class="btn btn-danger btn-sm">
+                        <fa-icon [icon]="'times'"></fa-icon>
+                        <span class="d-none d-md-inline">Delete</span>
+                    </button>
+                </div>
+            </mat-grid-tile-footer>
+
+        </mat-grid-tile>
+    </mat-grid-list>
+
+
+
+<!--    <div class="table-responsive" *ngIf="items?.length > 0">-->
+<!--        <table class="table table-striped" aria-describedby="page-heading">-->
+<!--            <thead>-->
+<!--            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">-->
+<!--            <th scope="col"  jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+<!--            <th scope="col"  jhiSortBy="price"><span>Price</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+<!--            <th scope="col"  jhiSortBy="name"><span>Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+<!--            <th scope="col"  jhiSortBy="quantity"><span>Quantity</span> <fa-icon [icon]="'sort'"></fa-icon></th>-->
+<!--            <th scope="col"></th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr *ngFor="let itemWithPicture of items ;trackBy: trackId">-->
+<!--                <td><a [routerLink]="['/item', itemWithPicture.item.id, 'view' ]">{{itemWithPicture.item.id}}</a></td>-->
+<!--                <td>{{itemWithPicture.item.price}}</td>-->
+<!--                <td>{{itemWithPicture.item.name}}</td>-->
+<!--                <td>{{itemWithPicture.item.quantity}}</td>-->
+<!--                <td class="text-right">-->
+<!--                    <div class="btn-group">-->
+<!--                        <button type="submit"-->
+<!--                                [routerLink]="['/item', itemWithPicture.item.id, 'view' ]"-->
+<!--                                class="btn btn-info btn-sm">-->
+<!--                            <fa-icon [icon]="'eye'"></fa-icon>-->
+<!--                            <span class="d-none d-md-inline">View</span>-->
+<!--                        </button>-->
+<!--                        <button type="submit"-->
+<!--                                [routerLink]="['/item', itemWithPicture.item.id, 'edit']"-->
+<!--                                class="btn btn-primary btn-sm">-->
+<!--                            <fa-icon [icon]="'pencil-alt'"></fa-icon>-->
+<!--                            <span class="d-none d-md-inline">Edit</span>-->
+<!--                        </button>-->
+<!--                        <button type="submit" (click)="delete(itemWithPicture)"-->
+<!--                                class="btn btn-danger btn-sm">-->
+<!--                            <fa-icon [icon]="'times'"></fa-icon>-->
+<!--                            <span class="d-none d-md-inline">Delete</span>-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </div>-->
+    <br/>
     <div [hidden]="items?.length === 0">
-        <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-        </div>
+<!--        <div class="row justify-content-center">-->
+<!--            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>-->
+<!--        </div>-->
         <div class="row justify-content-center">
             <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
         </div>

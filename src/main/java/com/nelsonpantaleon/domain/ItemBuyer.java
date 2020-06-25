@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.Instant;
 
 /**
- * A ItemBuyer.
+ * an ItemBuyer.
  */
 @Entity
 @Table(name = "item_buyer")

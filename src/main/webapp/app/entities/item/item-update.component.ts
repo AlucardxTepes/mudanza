@@ -40,14 +40,17 @@ export class ItemUpdateComponent implements OnInit {
   ngOnInit() {
     this.isSaving = false;
     this.activatedRoute.data.subscribe(({ itemWithPictures }) => {
-      console.log('route');
-      console.log(itemWithPictures);
-      this.updateForm(itemWithPictures.item);
-      this.updateImages(itemWithPictures);
+      if (itemWithPictures && itemWithPictures.item) {
+        this.updateForm(itemWithPictures);
+        this.updateImages(itemWithPictures);
+      }
     });
   }
 
-  updateForm(item: IItem) {
+  updateForm(itemWithPictures: IItemWithPictures) {
+    console.log('IWP');
+    console.log(itemWithPictures);
+    const item = itemWithPictures.item;
     this.editForm.patchValue({
       id: item.id,
       price: item.price,
@@ -63,7 +66,9 @@ export class ItemUpdateComponent implements OnInit {
   save() {
     this.isSaving = true;
     const item = this.createFromForm();
-    if (item.id !== undefined) {
+    console.log('==== SAVE ===');
+    console.log(item);
+    if (item.id !== null) {
       this.subscribeToSaveResponse(this.itemService.update(item));
     } else {
       this.subscribeToSaveResponse(this.itemService.create(item));

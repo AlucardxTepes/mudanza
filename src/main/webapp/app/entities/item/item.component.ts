@@ -11,12 +11,27 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { ItemService } from './item.service';
 import { ItemDeleteDialogComponent } from './item-delete-dialog.component';
 import { ItemWithPictures } from 'app/shared/model/item-with-pictures.model';
+import { IMAGES_PATH } from 'app/app.constants';
 
 @Component({
   selector: 'jhi-item',
-  templateUrl: './item.component.html'
+  templateUrl: './item.component.html',
+  styles: [
+    `
+      .item-grid-action-buttons {
+        right: 0;
+        bottom: 2px;
+        position: absolute;
+      }
+      .grid-item-image {
+        width: 135%;
+      }
+    `
+  ]
 })
 export class ItemComponent implements OnInit, OnDestroy {
+  IMG_SRC_PATH = `${location.origin}/${IMAGES_PATH}/`;
+
   items: ItemWithPictures[];
   error: any;
   success: any;
@@ -29,6 +44,7 @@ export class ItemComponent implements OnInit, OnDestroy {
   predicate: any;
   previousPage: any;
   reverse: any;
+  breakpoint: number;
 
   constructor(
     protected itemService: ItemService,
@@ -64,6 +80,10 @@ export class ItemComponent implements OnInit, OnDestroy {
     }
   }
 
+  onResize(event) {
+    this.breakpoint = event.target.innerWidth <= 480 ? 1 : 4;
+  }
+
   transition() {
     this.router.navigate(['/item'], {
       queryParams: {
@@ -88,6 +108,7 @@ export class ItemComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.breakpoint = window.innerWidth <= 480 ? 1 : 4;
     this.loadAll();
     this.registerChangeInItems();
   }

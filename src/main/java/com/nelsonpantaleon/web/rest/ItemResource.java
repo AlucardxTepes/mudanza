@@ -116,7 +116,7 @@ public class ItemResource {
             return result;
         }).collect(Collectors.toList());
         Page<ItemWithPicturesDTO> page = new PageImpl<>(items, pageable, items.size());
-
+        // TODO: Fix Page total item count and total pages and add to X-Total-Count header
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

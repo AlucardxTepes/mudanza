@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * A ItemPicture.
+ * an ItemPicture.
  */
 @Entity
 @Table(name = "item_picture")

@@ -36,7 +36,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject({ body: elemDefault });
       });
 
-      it('should create a ItemPicture', () => {
+      it('should create an ItemPicture', () => {
         const returnedFromService = Object.assign(
           {
             id: 0
@@ -53,7 +53,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject({ body: expected });
       });
 
-      it('should update a ItemPicture', () => {
+      it('should update an ItemPicture', () => {
         const returnedFromService = Object.assign(
           {
             filename: 'BBBBBB'
@@ -92,7 +92,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toContainEqual(expected);
       });
 
-      it('should delete a ItemPicture', () => {
+      it('should delete an ItemPicture', () => {
         service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
         const req = httpMock.expectOne({ method: 'DELETE' });
