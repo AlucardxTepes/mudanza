@@ -25,6 +25,7 @@ import { IMAGES_PATH } from 'app/app.constants';
       }
       .grid-item-image {
         width: 135%;
+        cursor: pointer;
       }
     `
   ]

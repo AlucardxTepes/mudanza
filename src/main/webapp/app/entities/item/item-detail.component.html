@@ -1,35 +1,48 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="itemWithPictures.item">
-            <h2><span>{{itemWithPictures.item.name}}</span> </h2>
+            <h2><span>{{itemWithPictures.item.name}}</span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
-            <dl class="row-md jh-entity-details">
-                <dt><span>Price</span></dt>
-                <dd>
-                    <span>{{itemWithPictures.item.price}}</span>
-                </dd>
-                <dt><span>Quantity</span></dt>
-                <dd>
-                    <span>{{itemWithPictures.item.quantity}}</span>
-                </dd>
+            <dl class="row-md jh-entity-details col-sm">
+                <div class="row">
+                    <div class="col-sm">
+                        <dt><span>Price</span></dt>
+                        <dd>
+                            <span>{{itemWithPictures.item.price}}</span>
+                        </dd>
+                        <dt><span>Quantity</span></dt>
+                        <dd>
+                            <span>{{itemWithPictures.item.quantity}}</span>
+                        </dd>
+                    </div>
+                    <div class="col-sm">
+                        <dt><span>Comments</span></dt>
+                        <dd>
+                            <span>This is the item's comments area</span>
+                        </dd>
+                    </div>
+                </div>
             </dl>
+            <div class="row">
+                <div class="form-group col-sm">
+                    <ul class="imageList">
+                        <li *ngFor="let image of images" class="imageContainer">
+                            <a [href]="image.imgURL" target="_blank"><img *ngIf="image.previewLoaded"
+                                                                          [src]="image.imgURL"
+                                                                          class="thumbImage"/></a>
+                        </li>
+                    </ul>
+                </div>
 
-            <div class="form-group">
-                <ul class="imageList">
-                    <li *ngFor="let image of images" class="imageContainer">
-                        <a [href]="image.imgURL" target="_blank"><img *ngIf="image.previewLoaded" [src]="image.imgURL" class="thumbImage"/></a>
-                    </li>
-                </ul>
-            </div>
-
-            <div>
-                <h4>Buyers</h4>
-                <ol>
-                    <li *ngFor="let buyer of itemBuyers">
-                        {{buyer.name}}
-                    </li>
-                </ol>
+                <div class="col-sm">
+                    <h4>Buyers</h4>
+                    <ol>
+                        <li *ngFor="let buyer of itemBuyers">
+                            {{buyer.name}}
+                        </li>
+                    </ol>
+                </div>
             </div>
 
             <button type="submit"

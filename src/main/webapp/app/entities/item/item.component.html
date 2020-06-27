@@ -21,6 +21,7 @@
                 <div><b>{{itemWithPicture.item.name}}</b></div>
             </mat-grid-tile-header>
             <img [src]="IMG_SRC_PATH + itemWithPicture.item.id + '/' + itemWithPicture.pictures[0]"
+                 [routerLink]="['/item', itemWithPicture.item.id, 'view' ]"
                  class="grid-item-image">
             <mat-grid-tile-footer>
                 <div> ${{itemWithPicture.item.price | number }}</div>
