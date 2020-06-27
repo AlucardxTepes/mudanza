@@ -1,13 +1,15 @@
 package com.nelsonpantaleon.domain;
 
-import javax.persistence.*;
+import com.nelsonpantaleon.domain.enumeration.Currency;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * an Item.
+ * A Item.
  */
 @Entity
 @Table(name = "item")
@@ -27,6 +29,14 @@ public class Item implements Serializable {
 
     @Column(name = "quantity")
     private Integer quantity;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "currency", nullable = false)
+    private Currency currency;
+
+    @Column(name = "description")
+    private String description;
 
     @OneToMany(mappedBy = "item")
     private Set<ItemBuyer> buyerList = new HashSet<>();
@@ -79,6 +89,32 @@ public class Item implements Serializable {
         this.quantity = quantity;
     }
 
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public Item currency(Currency currency) {
+        this.currency = currency;
+        return this;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Item description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Set<ItemBuyer> getBuyerList() {
         return buyerList;
     }
@@ -100,7 +136,7 @@ public class Item implements Serializable {
         return this;
     }
 
-    public void setBuyerLists(Set<ItemBuyer> itemBuyers) {
+    public void setBuyerList(Set<ItemBuyer> itemBuyers) {
         this.buyerList = itemBuyers;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
@@ -128,6 +164,8 @@ public class Item implements Serializable {
             ", price=" + getPrice() +
             ", name='" + getName() + "'" +
             ", quantity=" + getQuantity() +
+            ", currency='" + getCurrency() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

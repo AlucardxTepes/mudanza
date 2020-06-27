@@ -7,6 +7,7 @@ import { MudanzaTestModule } from '../../../test.module';
 import { ItemUpdateComponent } from 'app/entities/item/item-update.component';
 import { ItemService } from 'app/entities/item/item.service';
 import { Item } from 'app/shared/model/item.model';
+import { ItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 describe('Component Tests', () => {
   describe('Item Management Update Component', () => {
@@ -31,7 +32,8 @@ describe('Component Tests', () => {
     describe('save', () => {
       it('Should call update service on save for existing entity', fakeAsync(() => {
         // GIVEN
-        const entity = new Item(123);
+        const entity = new ItemWithPictures();
+        entity.item.id = 123;
         spyOn(service, 'update').and.returnValue(of(new HttpResponse({ body: entity })));
         comp.updateForm(entity);
         // WHEN
@@ -45,7 +47,7 @@ describe('Component Tests', () => {
 
       it('Should call create service on save for new entity', fakeAsync(() => {
         // GIVEN
-        const entity = new Item();
+        const entity = new ItemWithPictures();
         spyOn(service, 'create').and.returnValue(of(new HttpResponse({ body: entity })));
         comp.updateForm(entity);
         // WHEN

@@ -5,12 +5,10 @@ import { JhiResolvePagingParams } from 'ng-jhipster';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Item } from 'app/shared/model/item.model';
 import { ItemService } from './item.service';
 import { ItemComponent } from './item.component';
 import { ItemDetailComponent } from './item-detail.component';
 import { ItemUpdateComponent } from './item-update.component';
-import { IItem } from 'app/shared/model/item.model';
 import { ItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 @Injectable({ providedIn: 'root' })

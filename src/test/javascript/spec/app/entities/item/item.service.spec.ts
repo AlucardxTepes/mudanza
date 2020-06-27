@@ -3,6 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { take, map } from 'rxjs/operators';
 import { ItemService } from 'app/entities/item/item.service';
 import { IItem, Item } from 'app/shared/model/item.model';
+import { Currency } from 'app/shared/model/enumerations/currency.model';
 
 describe('Service Tests', () => {
   describe('Item Service', () => {
@@ -20,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(ItemService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Item(0, 0, 'AAAAAAA', 0);
+      elemDefault = new Item(0, 0, 'AAAAAAA', 0, Currency.DOP, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -36,7 +37,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject({ body: elemDefault });
       });
 
-      it('should create an Item', () => {
+      it('should create a Item', () => {
         const returnedFromService = Object.assign(
           {
             id: 0
@@ -53,12 +54,14 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject({ body: expected });
       });
 
-      it('should update an Item', () => {
+      it('should update a Item', () => {
         const returnedFromService = Object.assign(
           {
             price: 1,
             name: 'BBBBBB',
-            quantity: 1
+            quantity: 1,
+            currency: 'BBBBBB',
+            description: 'BBBBBB'
           },
           elemDefault
         );
@@ -78,7 +81,9 @@ describe('Service Tests', () => {
           {
             price: 1,
             name: 'BBBBBB',
-            quantity: 1
+            quantity: 1,
+            currency: 'BBBBBB',
+            description: 'BBBBBB'
           },
           elemDefault
         );
@@ -96,7 +101,7 @@ describe('Service Tests', () => {
         expect(expectedResult).toContainEqual(expected);
       });
 
-      it('should delete an Item', () => {
+      it('should delete a Item', () => {
         service.delete(123).subscribe(resp => (expectedResult = resp.ok));
 
         const req = httpMock.expectOne({ method: 'DELETE' });

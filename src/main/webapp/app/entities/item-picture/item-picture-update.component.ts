@@ -10,6 +10,7 @@ import { IItemPicture, ItemPicture } from 'app/shared/model/item-picture.model';
 import { ItemPictureService } from './item-picture.service';
 import { IItem } from 'app/shared/model/item.model';
 import { ItemService } from 'app/entities/item/item.service';
+import { IItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 @Component({
   selector: 'jhi-item-picture-update',
@@ -18,7 +19,7 @@ import { ItemService } from 'app/entities/item/item.service';
 export class ItemPictureUpdateComponent implements OnInit {
   isSaving: boolean;
 
-  items: IItem[];
+  items: IItemWithPictures[];
 
   editForm = this.fb.group({
     id: [],
@@ -41,7 +42,10 @@ export class ItemPictureUpdateComponent implements OnInit {
     });
     this.itemService
       .query()
-      .subscribe((res: HttpResponse<IItem[]>) => (this.items = res.body), (res: HttpErrorResponse) => this.onError(res.message));
+      .subscribe(
+        (res: HttpResponse<IItemWithPictures[]>) => (this.items = res.body),
+        (res: HttpErrorResponse) => this.onError(res.message)
+      );
   }
 
   updateForm(itemPicture: IItemPicture) {

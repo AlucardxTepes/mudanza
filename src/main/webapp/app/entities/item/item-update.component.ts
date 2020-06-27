@@ -26,7 +26,9 @@ export class ItemUpdateComponent implements OnInit {
     id: [],
     price: [],
     name: [],
-    quantity: []
+    quantity: [],
+    currency: [null, [Validators.required]],
+    description: []
   });
   private imageFiles: File[];
 
@@ -55,7 +57,9 @@ export class ItemUpdateComponent implements OnInit {
       id: item.id,
       price: item.price,
       name: item.name,
-      quantity: item.quantity
+      quantity: item.quantity,
+      currency: item.currency,
+      description: item.description
     });
   }
 
@@ -81,7 +85,9 @@ export class ItemUpdateComponent implements OnInit {
       id: this.editForm.get(['id']).value,
       price: this.editForm.get(['price']).value,
       name: this.editForm.get(['name']).value,
-      quantity: this.editForm.get(['quantity']).value
+      quantity: this.editForm.get(['quantity']).value,
+      currency: this.editForm.get(['currency']).value,
+      description: this.editForm.get(['description']).value
     };
   }
 

@@ -5,10 +5,12 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { IItem } from 'app/shared/model/item.model';
-import { ItemWithPictures } from 'app/shared/model/item-with-pictures.model';
+import { IItemWithPictures, ItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 
 type EntityResponseType = HttpResponse<IItem>;
 type EntityArrayResponseType = HttpResponse<IItem[]>;
+type EntityWithPicturesResponseType = HttpResponse<IItemWithPictures>;
+type EntityWithPicturesArrayResponseType = HttpResponse<IItemWithPictures[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ItemService {
@@ -28,13 +30,13 @@ export class ItemService {
     return this.http.get<IItem>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  findWithPictures(id: number): Observable<EntityResponseType> {
-    return this.http.get<ItemWithPictures>(`api/itemWithPictures/${id}`, { observe: 'response' });
+  findWithPictures(id: number): Observable<EntityWithPicturesResponseType> {
+    return this.http.get<IItemWithPictures>(`api/itemWithPictures/${id}`, { observe: 'response' });
   }
 
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<EntityWithPicturesArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<ItemWithPictures[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<IItemWithPictures[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
   delete(id: number): Observable<HttpResponse<any>> {

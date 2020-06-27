@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.nelsonpantaleon.domain.enumeration.Currency;
 /**
  * Integration tests for the {@link ItemResource} REST controller.
  */
@@ -41,6 +42,12 @@ public class ItemResourceIT {
 
     private static final Integer DEFAULT_QUANTITY = 1;
     private static final Integer UPDATED_QUANTITY = 2;
+
+    private static final Currency DEFAULT_CURRENCY = Currency.DOP;
+    private static final Currency UPDATED_CURRENCY = Currency.USD;
+
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     @Autowired
     private ItemRepository itemRepository;
@@ -67,7 +74,7 @@ public class ItemResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ItemResource itemResource = new ItemResource(itemRepository, itemPictureRepository, itemBuyerRepository);
+        final ItemResource itemResource = new ItemResource(itemRepository);
         this.restItemMockMvc = MockMvcBuilders.standaloneSetup(itemResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -86,7 +93,9 @@ public class ItemResourceIT {
         Item item = new Item()
             .price(DEFAULT_PRICE)
             .name(DEFAULT_NAME)
-            .quantity(DEFAULT_QUANTITY);
+            .quantity(DEFAULT_QUANTITY)
+            .currency(DEFAULT_CURRENCY)
+            .description(DEFAULT_DESCRIPTION);
         return item;
     }
     /**
@@ -99,7 +108,9 @@ public class ItemResourceIT {
         Item item = new Item()
             .price(UPDATED_PRICE)
             .name(UPDATED_NAME)
-            .quantity(UPDATED_QUANTITY);
+            .quantity(UPDATED_QUANTITY)
+            .currency(UPDATED_CURRENCY)
+            .description(UPDATED_DESCRIPTION);
         return item;
     }
 
@@ -126,6 +137,8 @@ public class ItemResourceIT {
         assertThat(testItem.getPrice()).isEqualTo(DEFAULT_PRICE);
         assertThat(testItem.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testItem.getQuantity()).isEqualTo(DEFAULT_QUANTITY);
+        assertThat(testItem.getCurrency()).isEqualTo(DEFAULT_CURRENCY);
+        assertThat(testItem.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -150,6 +163,24 @@ public class ItemResourceIT {
 
     @Test
     @Transactional
+    public void checkCurrencyIsRequired() throws Exception {
+        int databaseSizeBeforeTest = itemRepository.findAll().size();
+        // set the field null
+        item.setCurrency(null);
+
+        // Create the Item, which fails.
+
+        restItemMockMvc.perform(post("/api/items")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(item)))
+            .andExpect(status().isBadRequest());
+
+        List<Item> itemList = itemRepository.findAll();
+        assertThat(itemList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllItems() throws Exception {
         // Initialize the database
         itemRepository.saveAndFlush(item);
@@ -161,9 +192,11 @@ public class ItemResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(item.getId().intValue())))
             .andExpect(jsonPath("$.[*].price").value(hasItem(DEFAULT_PRICE.doubleValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)));
+            .andExpect(jsonPath("$.[*].quantity").value(hasItem(DEFAULT_QUANTITY)))
+            .andExpect(jsonPath("$.[*].currency").value(hasItem(DEFAULT_CURRENCY.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
-
+    
     @Test
     @Transactional
     public void getItem() throws Exception {
@@ -177,7 +210,9 @@ public class ItemResourceIT {
             .andExpect(jsonPath("$.id").value(item.getId().intValue()))
             .andExpect(jsonPath("$.price").value(DEFAULT_PRICE.doubleValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY));
+            .andExpect(jsonPath("$.quantity").value(DEFAULT_QUANTITY))
+            .andExpect(jsonPath("$.currency").value(DEFAULT_CURRENCY.toString()))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
 
     @Test
@@ -203,7 +238,9 @@ public class ItemResourceIT {
         updatedItem
             .price(UPDATED_PRICE)
             .name(UPDATED_NAME)
-            .quantity(UPDATED_QUANTITY);
+            .quantity(UPDATED_QUANTITY)
+            .currency(UPDATED_CURRENCY)
+            .description(UPDATED_DESCRIPTION);
 
         restItemMockMvc.perform(put("/api/items")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -217,6 +254,8 @@ public class ItemResourceIT {
         assertThat(testItem.getPrice()).isEqualTo(UPDATED_PRICE);
         assertThat(testItem.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testItem.getQuantity()).isEqualTo(UPDATED_QUANTITY);
+        assertThat(testItem.getCurrency()).isEqualTo(UPDATED_CURRENCY);
+        assertThat(testItem.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test

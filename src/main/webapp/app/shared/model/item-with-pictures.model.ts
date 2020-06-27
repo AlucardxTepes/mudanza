@@ -6,5 +6,5 @@ export interface IItemWithPictures {
 }
 
 export class ItemWithPictures implements IItemWithPictures {
-  constructor(item?: IItem, public pictures?: string[]) {}
+  constructor(public item?: IItem, public pictures?: string[]) {}
 }

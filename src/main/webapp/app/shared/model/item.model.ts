@@ -1,12 +1,14 @@
 import { IItemBuyer } from 'app/shared/model/item-buyer.model';
+import { Currency } from 'app/shared/model/enumerations/currency.model';
 
 export interface IItem {
   id?: number;
   price?: number;
   name?: string;
   quantity?: number;
-  buyerLists?: IItemBuyer[];
-  pictures?: string[];
+  currency?: Currency;
+  description?: string;
+  buyerList?: IItemBuyer[];
 }
 
 export class Item implements IItem {
@@ -15,7 +17,8 @@ export class Item implements IItem {
     public price?: number,
     public name?: string,
     public quantity?: number,
-    public buyerLists?: IItemBuyer[],
-    public pictures?: string[]
+    public currency?: Currency,
+    public description?: string,
+    public buyerList?: IItemBuyer[]
   ) {}
 }

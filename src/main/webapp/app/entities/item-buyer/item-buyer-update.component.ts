@@ -21,7 +21,7 @@ import { IItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 export class ItemBuyerUpdateComponent implements OnInit {
   isSaving: boolean;
 
-  items: IItem[];
+  items: IItemWithPictures[];
 
   editForm = this.fb.group({
     id: [],
