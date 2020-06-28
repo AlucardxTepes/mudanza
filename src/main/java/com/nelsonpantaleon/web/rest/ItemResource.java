@@ -111,6 +111,7 @@ public class ItemResource {
     public ResponseEntity<List<ItemWithPicturesDTO>> getAllItems(Pageable pageable) {
         log.debug("REST request to get a page of Items");
         List<ItemWithPicturesDTO> items = itemRepository.findAll(pageable).stream().map(item -> {
+            item.setBuyerList(new HashSet<>(itemBuyerRepository.findAllByItemId(item.getId())));
             ItemWithPicturesDTO result = new ItemWithPicturesDTO();
             result.setItem(item);
             result.setPictures(itemPictureRepository.findAllByItemId(item.getId()).stream().map(itemPicture -> itemPicture.getFilename()).collect(Collectors.toSet()));

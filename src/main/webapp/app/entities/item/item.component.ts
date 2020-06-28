@@ -144,4 +144,20 @@ export class ItemComponent implements OnInit, OnDestroy {
     this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
     this.items = data;
   }
+
+  soldOrReserved(item: IItem) {
+    if (item.buyerList && item.buyerList.length > 0) {
+      console.log('buyerList');
+      // if theres at least one, then item is reserved
+      let result = item.buyerList.length > 0 ? 'Reserved' : '';
+      console.log(result);
+      // Check if any buyer has been marked as paidm
+      const someonePaid = item.buyerList.filter(buyer => buyer.paid).length > 0 ? true : false;
+      // if first buyer has paid then item is sold
+      if (someonePaid) {
+        result = 'Sold';
+      }
+      return result;
+    }
+  }
 }

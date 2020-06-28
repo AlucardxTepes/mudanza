@@ -18,13 +18,13 @@
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" (window:resize)="onResize($event)" gutterSize="10">
         <mat-grid-tile *ngFor="let itemWithPicture of items; trackBy: trackId" colspan="1" rowspan="1">
             <mat-grid-tile-header>
-                <div><b>{{itemWithPicture.item.name}}</b></div>
+                <div><span *ngIf="soldOrReserved(itemWithPicture.item) === 'Sold' || soldOrReserved(itemWithPicture.item) === 'Reserved'" > {{soldOrReserved(itemWithPicture.item) | uppercase }} - </span><b>{{itemWithPicture.item.name}}</b></div>
             </mat-grid-tile-header>
             <img [src]="IMG_SRC_PATH + itemWithPicture.item.id + '/' + itemWithPicture.pictures[0]"
                  [routerLink]="['/item', itemWithPicture.item.id, 'view' ]"
                  class="grid-item-image">
             <mat-grid-tile-footer>
-                <div> ${{itemWithPicture.item.price | number }}</div>
+                <div> <span *ngIf="soldOrReserved(itemWithPicture.item) === 'Sold' || soldOrReserved(itemWithPicture.item) === 'Reserved'" > {{soldOrReserved(itemWithPicture.item) | uppercase }} - </span>{{itemWithPicture.item.currency}} ${{itemWithPicture.item.price | number }}</div>
                 <div class="btn-group item-grid-action-buttons">
                     <button type="submit" [routerLink]="['/item', itemWithPicture.item.id, 'view' ]"
                             class="btn btn-info btn-sm">
