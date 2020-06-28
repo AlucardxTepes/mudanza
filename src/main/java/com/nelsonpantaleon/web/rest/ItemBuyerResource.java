@@ -2,6 +2,7 @@ package com.nelsonpantaleon.web.rest;
 
 import com.nelsonpantaleon.domain.ItemBuyer;
 import com.nelsonpantaleon.repository.ItemBuyerRepository;
+import com.nelsonpantaleon.security.SecurityUtils;
 import com.nelsonpantaleon.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -55,6 +56,9 @@ public class ItemBuyerResource {
         if (itemBuyer.getId() != null) {
             throw new BadRequestAlertException("A new itemBuyer cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (!SecurityUtils.isAuthenticated()) {
+            itemBuyer.setPaid(false); // prevent unauth user from setting field
+        }
         itemBuyer.setTimestamp(Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
         ItemBuyer result = itemBuyerRepository.save(itemBuyer);
         return ResponseEntity.created(new URI("/api/item-buyers/" + result.getId()))
@@ -78,6 +82,9 @@ public class ItemBuyerResource {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         itemBuyer.setTimestamp(itemBuyerRepository.getOne(itemBuyer.getId()).getTimestamp()); // preserve creation timestamp
+        if (!SecurityUtils.isAuthenticated()) {
+            itemBuyer.setPaid(itemBuyerRepository.getOne(itemBuyer.getId()).isPaid()); // prevent unauth user from changing field
+        }
         ItemBuyer result = itemBuyerRepository.save(itemBuyer);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, itemBuyer.getId().toString()))

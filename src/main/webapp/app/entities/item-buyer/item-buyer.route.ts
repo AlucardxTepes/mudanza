@@ -53,10 +53,9 @@ export const itemBuyerRoute: Routes = [
       itemBuyer: ItemBuyerResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      // authorities: ['ROLE_USER'],
       pageTitle: 'ItemBuyers'
-    },
-    canActivate: [UserRouteAccessService]
+    }
   },
   {
     path: ':id/edit',

@@ -32,11 +32,10 @@ export const itemRoute: Routes = [
       pagingParams: JhiResolvePagingParams
     },
     data: {
-      authorities: ['ROLE_USER'],
+      // authorities: ['ROLE_USER'],
       defaultSort: 'id,asc',
       pageTitle: 'Items'
-    },
-    canActivate: [UserRouteAccessService]
+    }
   },
   {
     path: ':id/view',
@@ -45,10 +44,9 @@ export const itemRoute: Routes = [
       itemWithPictures: ItemResolve
     },
     data: {
-      authorities: ['ROLE_USER'],
+      // authorities: ['ROLE_USER'],
       pageTitle: 'Items'
-    },
-    canActivate: [UserRouteAccessService]
+    }
   },
   {
     path: 'new',
