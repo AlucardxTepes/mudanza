@@ -15,6 +15,9 @@ export class ItemBuyerDetailComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ itemBuyer }) => {
       this.itemBuyer = itemBuyer;
+      if (this.itemBuyer.timestamp) {
+        (this.itemBuyer.timestamp as any) = this.itemBuyer.timestamp.toDate();
+      }
     });
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { IItemWithPictures } from 'app/shared/model/item-with-pictures.model';
 import { IMAGES_PATH } from 'app/app.constants';
@@ -10,14 +10,14 @@ import { HttpResponse } from '@angular/common/http';
 @Component({
   selector: 'jhi-item-detail',
   templateUrl: './item-detail.component.html',
-  styleUrls: ['item-update.component.scss']
+  styleUrls: ['item-detail.component.scss']
 })
 export class ItemDetailComponent implements OnInit {
   itemWithPictures: IItemWithPictures;
   images = new Set();
   itemBuyers = Array.of<ItemBuyer>();
 
-  constructor(protected activatedRoute: ActivatedRoute, protected itemBuyerService: ItemBuyerService) {}
+  constructor(protected router: Router, protected activatedRoute: ActivatedRoute, protected itemBuyerService: ItemBuyerService) {}
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(({ itemWithPictures }) => {
@@ -51,17 +51,28 @@ export class ItemDetailComponent implements OnInit {
 
   public blobToFile = (theBlob: Blob, fileName: string): File => {
     const b: any = theBlob;
-    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+    // A Blob() is almost a File() - it's just missing the two properties below which we will add
     b.lastModifiedDate = new Date();
     b.name = fileName;
 
-    //Cast to a File() type
+    // Cast to a File() type
     return theBlob as File;
   };
 
   private updateItemBuyers(itemId: number) {
     this.itemBuyerService.findByItemId(itemId).subscribe((res: HttpResponse<IItemBuyer[]>) => {
       this.itemBuyers = res.body;
+      this.itemBuyers.sort((a, b) => a.timestamp.toDate().getTime() - b.timestamp.toDate().getTime());
+      this.itemBuyers.forEach(buyer => console.log(`=== buyer: ${buyer.name} : ${buyer.timestamp.toDate()}`));
+    });
+  }
+
+  navigateToBuyItem() {
+    this.router.navigate(['item-buyer/new'], {
+      state: {
+        itemId: this.itemWithPictures.item.id,
+        itemName: this.itemWithPictures.item.name
+      }
     });
   }
 }

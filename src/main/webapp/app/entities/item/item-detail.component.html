@@ -46,9 +46,17 @@
                             {{buyer.name}}
                         </li>
                     </ol>
+                    <button id="jh-create-entity" class="btn btn-primary jh-create-entity create-item-buyer"
+                            (click)="navigateToBuyItem()">
+                        <fa-icon [icon]="'plus'"></fa-icon>
+                        <span>
+                            Buy / Join list
+                        </span>
+                    </button>
                 </div>
             </div>
 
+            <br/>
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">

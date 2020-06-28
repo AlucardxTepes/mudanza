@@ -2,10 +2,10 @@ package com.nelsonpantaleon.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 /**
  * an ItemBuyer.
@@ -37,7 +37,7 @@ public class ItemBuyer implements Serializable {
     private Integer quantity;
 
     @Column(name = "timestamp")
-    private Instant timestamp;
+    private Timestamp timestamp;
 
     @Column(name = "paid")
     private Boolean paid;
@@ -107,16 +107,16 @@ public class ItemBuyer implements Serializable {
         this.quantity = quantity;
     }
 
-    public Instant getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public ItemBuyer timestamp(Instant timestamp) {
+    public ItemBuyer timestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
         return this;
     }
 
-    public void setTimestamp(Instant timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

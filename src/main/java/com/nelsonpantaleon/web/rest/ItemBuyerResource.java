@@ -3,7 +3,6 @@ package com.nelsonpantaleon.web.rest;
 import com.nelsonpantaleon.domain.ItemBuyer;
 import com.nelsonpantaleon.repository.ItemBuyerRepository;
 import com.nelsonpantaleon.web.rest.errors.BadRequestAlertException;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -16,8 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import java.time.Instant;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +55,7 @@ public class ItemBuyerResource {
         if (itemBuyer.getId() != null) {
             throw new BadRequestAlertException("A new itemBuyer cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        itemBuyer.setTimestamp(Instant.now());
+        itemBuyer.setTimestamp(Timestamp.valueOf(LocalDateTime.now(ZoneId.of("UTC"))));
         ItemBuyer result = itemBuyerRepository.save(itemBuyer);
         return ResponseEntity.created(new URI("/api/item-buyers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
@@ -77,6 +77,7 @@ public class ItemBuyerResource {
         if (itemBuyer.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        itemBuyer.setTimestamp(itemBuyerRepository.getOne(itemBuyer.getId()).getTimestamp()); // preserve creation timestamp
         ItemBuyer result = itemBuyerRepository.save(itemBuyer);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, itemBuyer.getId().toString()))
